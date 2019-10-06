@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.myenv'))
+load_dotenv(os.path.join(basedir, '.env'))
 
 consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secrete = os.environ.get("CONSUMER_SECRETE")
