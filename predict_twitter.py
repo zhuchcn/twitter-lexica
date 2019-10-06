@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+load_dotenv(os.path.join(basedir, '.myenv'))
 
 consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secrete = os.environ.get("CONSUMER_SECRETE")
@@ -41,6 +41,7 @@ class TwitterLexica():
         return f"<TwitterLexica: {self.user_name}>"
 
     def get_tweets(self, screen_name, max_tweets, count=200):
+        max_request = 10
         alltweets = []
 
         new_tweets = self.fetch_tweets(screen_name, count)
@@ -53,6 +54,7 @@ class TwitterLexica():
                     if not tweet[2].startswith('RT @')]
         alltweets.extend(new_tweets)
 
+        i = 0
         while len(new_tweets) > 0:
             new_tweets = self.fetch_tweets(screen_name, count, max_id=oldest)    
             if len(new_tweets) == 0:
@@ -66,6 +68,10 @@ class TwitterLexica():
             
             if(len(alltweets) > max_tweets):
                 alltweets = alltweets[:max_tweets]
+                return alltweets
+            
+            i += 1
+            if i >= 10:
                 return alltweets
 
     @staticmethod
@@ -162,33 +168,33 @@ def main():
         
         try:
             tl = TwitterLexica(args.screen_name, args.max_tweets)
-            
             if args.output_dir:
                 tl.save_twitters(args.output_dir)
-
-            age, gender = tl.predict()
-            if args.output_file:
-                with open(args.output_file, "w") as fh:
-                    fh.write("age\tgender\n")
-                    fh.write(f"{age}\t{gender}\n")
-            else:
-                print(f"""Username: {tl.user_name}
-Predicted:
-    Age: {age},
-    Gender: {gender} ({"female" if gender > 0 else "male"})""")
-        
+            age, gender = tl.predict() if tl.tweets else (None, None)
         except tweepy.TweepError as e:
             if e.api_code == 34:
                 print(f"user {args['screen_name']} was not found")
             else:
                 print(e)
+            age, gender = None, None
+
+        if args.output_file:
+            num_tweets = len(tl.tweets) if tl.tweets else 0
+            with open(args.output_file, "w") as fh:
+                fh.write("user name\tnum tweets\tage\tgender\n")
+                fh.write(f"{args.screen_name}\t{num_tweets}\t{age}\t{gender}\n")
+        else:
+            print(f"""Username: {tl.user_name}
+Lexica prediction base on {len(tl.tweets) if tl.tweets else 0} tweets:
+    Age: {age},
+    Gender: {gender}""")
 
     elif args.input_file:
         if not args.output_file:
             raise ValueError("--output-file must not be None")
         
         with open(args.output_file, "w") as fh:
-            fh.write("age\tgender\n")
+            fh.write("user name\tnum tweets\tage\tgender\n")
         
         with open(args.input_file,"r") as fh:
             for line in fh:
@@ -196,28 +202,28 @@ Predicted:
                 screen_name = re.sub('^"|"$', "", screen_name)
                 screen_name = re.sub("^'|'$", "", screen_name)
                 
-                if not screen_name.startwith("@"):
+                if not screen_name.startswith("@"):
                     continue
                 try:
                     tl = TwitterLexica(screen_name, args.max_tweets)
                     if args.output_dir:
                         tl.save_twitters(args.output_dir)
 
-                    age, gender = tl.predict()
-
-                    with open(args.output_file, "a") as fh:
-                        fh.write(f"{age}\t{gender}\n")
-                    
-                    print(f"user {screen_name} was saved")
-
-                    if args.output_dir:
-                        tl.save_twitters(args.output_dir)
+                    age, gender = tl.predict() if tl.tweets else (None, None)
 
                 except tweepy.TweepError as e:
                     if e.api_code == 34:
                         print(f"user {screen_name} was not found")
                     else:
                         print(e)
+                    age, gender = None, None
+
+                with open(args.output_file, "a") as fh:
+                    num_tweets = len(tl.tweets) if tl.tweets else 0
+                    fh.write(f"{screen_name}\t{num_tweets}\t{age}\t{gender}\n")
+                print(f"user {screen_name} was saved")
+                if args.output_dir:
+                    tl.save_twitters(args.output_dir)
 
 if __name__ == "__main__":          
     main()            
