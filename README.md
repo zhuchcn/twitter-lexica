@@ -21,15 +21,20 @@ python predict_twitter.py -s @realDonaldTrump
 
 To predict a list of user, use a txt file with each user name in a row.
 ```
-python predict_twitter.py -i test.txt -o predict.txt
+python predict_twitter.py -i users.txt -o predict.txt
 ```
 
 To save all tweets used, use a directory
 ```
-python predict_twitter.py -i test.txt -o predict.txt -d user_twitters
+python predict_twitter.py -i users.txt -o predict.txt -d user_twitters
 ```
 
 To save the output log
 ```
 python predict_twitter.py -i test.txt -o predict.txt -d user_twitters > log.txt
+```
+
+To get help
+```
+python predict_twitter.py --help
 ```
