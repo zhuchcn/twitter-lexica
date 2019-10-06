@@ -11,6 +11,17 @@ git clone https://www.github.com/zhuchcn/twitter-lexica.git
 pip install requirements.txt
 ```
 
+## Twitter API
+
+A valid Twitter API key is required in order to retrieve user's tweets from twitter. The API can be set as environment variables.
+
+```
+export CONSUMER_KEY="XXX"
+export CONSUMER_SECRETE="XXX"
+export ACCESS_KEY="XXX"
+export ACCESS_SECRETE="XXX"
+```
+
 ## Usage
 
 To predict a single user:
