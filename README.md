@@ -13,19 +13,13 @@ pip install requirements.txt
 
 ## Twitter API
 
-A valid Twitter API key is required in order to retrieve user's tweets from twitter. The API can be set as environment variables.
+A valid Twitter API key is required in order to retrieve user's tweets from twitter. The API keys must be put into the `.env` file. Replace the XXX with your own twitter api keys.
 
 ```
-export CONSUMER_KEY="XXX"
-export CONSUMER_SECRETE="XXX"
-export ACCESS_KEY="XXX"
-export ACCESS_SECRETE="XXX"
-```
-
-Alternatively, you can save this into a `.env` file, and source it before running the script.
-
-```
-source .env
+CONSUMER_KEY="XXX"
+CONSUMER_SECRETE="XXX"
+ACCESS_KEY="XXX"
+ACCESS_SECRETE="XXX"
 ```
 
 ## Usage
