@@ -22,6 +22,12 @@ export ACCESS_KEY="XXX"
 export ACCESS_SECRETE="XXX"
 ```
 
+Alternatively, you can save this into a `.env` file, and source it before running the script.
+
+```
+source .env
+```
+
 ## Usage
 
 To predict a single user:
