@@ -71,7 +71,7 @@ class TwitterLexica():
                 return alltweets
             
             i += 1
-            if i >= 10:
+            if i >= max_request:
                 return alltweets
 
     @staticmethod
@@ -130,7 +130,8 @@ class TwitterLexica():
         with open(path,"w") as f: 
             writer = csv.writer(f)
             writer.writerow(["id","created_at","text"])
-            writer.writerows(self.tweets)
+            if self.tweets:
+                writer.writerows(self.tweets)
 
 
 def parse_args():
