@@ -178,6 +178,7 @@ def main():
             else:
                 print(e)
             age, gender = None, None
+            raise tweepy.TweepError(e)
 
         if args.output_file:
             num_tweets = len(tl.tweets) if tl.tweets else 0
@@ -218,6 +219,7 @@ Lexica prediction base on {len(tl.tweets) if tl.tweets else 0} tweets:
                     else:
                         print(e)
                     age, gender = None, None
+                    raise tweepy.TweepError(e)
 
                 with open(args.output_file, "a") as fh:
                     num_tweets = len(tl.tweets) if tl.tweets else 0
