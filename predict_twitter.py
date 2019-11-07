@@ -235,7 +235,8 @@ Lexica prediction base on {len(tl.tweets) if tl.tweets else 0} tweets:
                     fh.write(f"{screen_name}\t{num_tweets}\t{age}\t{gender}\n")
                 print(f"user {screen_name} was saved")
                 if args.output_dir:
-                    tl.save_twitters(args.output_dir)
+                    if tl is not None:
+                        tl.save_twitters(args.output_dir)
 
 if __name__ == "__main__":          
     main()            
