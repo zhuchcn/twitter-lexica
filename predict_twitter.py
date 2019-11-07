@@ -156,8 +156,8 @@ def parse_args():
         """
     )
     parser.add_argument(
-        '-m', '--max-tweets', default=200,
-        help="Max number of must recent twitters to use."
+        '-m', '--max-tweets', default=200, type=int,
+        help="Max number of most recent twitters to use."
     )
     return parser.parse_args()
 
