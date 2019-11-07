@@ -166,7 +166,6 @@ def main():
     if args.screen_name:
         if args.input_file:
             print("The input file is ignored")
-        
         try:
             tl = TwitterLexica(args.screen_name, args.max_tweets)
             if args.output_dir:
@@ -177,15 +176,20 @@ def main():
                 print(f"user {args['screen_name']} was not found")
             else:
                 print(e)
+            tl = None
             age, gender = None, None
-            raise tweepy.TweepError(e)
-
+            
         if args.output_file:
-            num_tweets = len(tl.tweets) if tl.tweets else 0
+            if tl is None:
+                num_tweets = 0
+            elif tl.tweets:
+                num_tweets = len(tl.tweets)
+            else:
+                num_tweets = 0
             with open(args.output_file, "w") as fh:
                 fh.write("user name\tnum tweets\tage\tgender\n")
                 fh.write(f"{args.screen_name}\t{num_tweets}\t{age}\t{gender}\n")
-        else:
+        elif tl is not None:
             print(f"""Username: {tl.user_name}
 Lexica prediction base on {len(tl.tweets) if tl.tweets else 0} tweets:
     Age: {age},
@@ -219,10 +223,15 @@ Lexica prediction base on {len(tl.tweets) if tl.tweets else 0} tweets:
                     else:
                         print(e)
                     age, gender = None, None
-                    raise tweepy.TweepError(e)
+                    tl = None
 
                 with open(args.output_file, "a") as fh:
-                    num_tweets = len(tl.tweets) if tl.tweets else 0
+                    if tl is None:
+                        num_tweets = 0
+                    elif tl.tweets:
+                        num_tweets = len(tl.tweets)
+                    else:
+                        num_tweets = 0
                     fh.write(f"{screen_name}\t{num_tweets}\t{age}\t{gender}\n")
                 print(f"user {screen_name} was saved")
                 if args.output_dir:
